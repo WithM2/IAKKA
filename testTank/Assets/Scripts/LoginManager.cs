@@ -1,37 +1,65 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using TMPro;
 using UnityEngine.UI;
+using System.IO;
 
 public class LoginManager : MonoBehaviour
 {
-    public InputField usernameInput;
-    public InputField passwordInput;
+    public TMP_InputField usernameInput;
+    public TMP_InputField passwordInput;
     public Button loginButton;
-    public Text errorMessage;
-    private UserData userData;
+    public TextMeshProUGUI errorMessage; // ErrorMessage 텍스트 요소를 연결하기 위한 필드
+
+    private UserList userList;
 
     void Start()
     {
-        loginButton.onClick.AddListener(OnLoginButtonClicked);
-        userData = UserData.LoadFromJSON("user_data");
-        if (userData == null)
+        LoadUserData();
+        loginButton.onClick.AddListener(OnLoginButtonClick);
+        errorMessage.text = ""; // 초기 오류 메시지를 빈 문자열로 설정
+    }
+
+    void LoadUserData()
+    {
+        TextAsset jsonFile = Resources.Load<TextAsset>("users");
+        if (jsonFile != null)
         {
-            Debug.LogError("Failed to load user data!");
+            userList = JsonUtility.FromJson<UserList>("{\"users\":" + jsonFile.text + "}");
+        }
+        else
+        {
+            Debug.LogError("Cannot load users.json file.");
+            errorMessage.text = "Cannot load user data."; // 오류 메시지 출력
         }
     }
 
-    void OnLoginButtonClicked()
+    void OnLoginButtonClick()
     {
         string username = usernameInput.text;
         string password = passwordInput.text;
 
-        if (userData != null && userData.ValidateUser(username, password))
+        if (IsValidUser(username, password))
         {
-            SceneManager.LoadScene("ControlScene");
+            Debug.Log("Login Successful");
+            errorMessage.text = ""; // 성공 시 오류 메시지 지우기
+            // 로그인 성공 시 다음 화면으로 이동하거나 다른 동작을 수행합니다.
         }
         else
         {
-            errorMessage.text = "Invalid username or password!";
+            Debug.Log("Login Failed");
+            errorMessage.text = "Invalid username or password."; // 오류 메시지 출력
         }
+    }
+
+    bool IsValidUser(string username, string password)
+    {
+        foreach (User user in userList.users)
+        {
+            if (user.id == username && user.password == password)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
