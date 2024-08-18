@@ -12,33 +12,46 @@ public class SignupManager : MonoBehaviour
     public Button applyButton; // Apply 버튼
     public GameObject signupPanel;
     public Button closeSignupButton;
+    public TextMeshProUGUI errorMessage; // 오류 메시지를 표시할 TextMeshPro
+    public GameObject popupPanel; // 팝업 패널
 
     private string filePath;
+    private UserList userList;
 
     void Start()
     {
         // 경로 설정 (Resources 폴더는 빌드 후에는 쓰기 불가능하므로 Application.persistentDataPath 사용)
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
 
-        // 만약 Resources 폴더의 초기 파일을 사용하여 persistentDataPath로 복사하는 작업이 필요할 수 있음
-        if (!File.Exists(filePath))
-        {
-            TextAsset jsonFile = Resources.Load<TextAsset>("users");
-            if (jsonFile != null)
-            {
-                File.WriteAllText(filePath, jsonFile.text);
-            }
-            else
-            {
-                Debug.LogError("Initial users.json not found in Resources.");
-            }
-        }
+        // 사용자 데이터 로드
+        LoadUserData();
 
         signupButton.onClick.AddListener(OnSignupButtonClick);
         closeSignupButton.onClick.AddListener(OnCloseSignupButtonClick);
         applyButton.onClick.AddListener(OnApplyButtonClick);
 
         signupPanel.SetActive(false);
+    }
+
+    void LoadUserData()
+    {
+        if (File.Exists(filePath))
+        {
+            string jsonText = File.ReadAllText(filePath);
+            Debug.Log("Loaded JSON: " + jsonText); // JSON 내용 출력
+            userList = JsonUtility.FromJson<UserList>(jsonText); // JSON을 UserList로 파싱
+            if (userList == null)
+            {
+                userList = new UserList { users = new List<User>() };
+                Debug.LogWarning("User data was null, initialized a new list.");
+            }
+            Debug.Log("User data loaded from JSON.");
+        }
+        else
+        {
+            userList = new UserList { users = new List<User>() };
+            Debug.LogWarning("User data file not found, created a new list.");
+        }
     }
 
     void OnSignupButtonClick()
@@ -63,25 +76,18 @@ public class SignupManager : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            Debug.LogError("Username or password cannot be empty.");
+            ShowPopup("Username or password cannot be empty.");
             return;
         }
 
-        // JSON 파일 읽기
-        UserList userList;
-        if (File.Exists(filePath))
+        // 이미 존재하는 사용자 이름인지 확인
+        if (IsUsernameExists(username))
         {
-            string jsonText = File.ReadAllText(filePath);
-
-            // JSON을 UserList로 파싱
-            userList = JsonUtility.FromJson<UserList>("{\"users\":" + jsonText + "}");
-        }
-        else
-        {
-            userList = new UserList { users = new List<User>() };
+            ShowPopup("Username already exists. Please choose a different one.");
+            return;
         }
 
-        // 사용자 추가
+        // 기존 데이터에 새로운 사용자 추가
         userList.users.Add(new User { id = username, password = password });
 
         // JSON 파일에 저장
@@ -89,9 +95,37 @@ public class SignupManager : MonoBehaviour
         File.WriteAllText(filePath, updatedJson);
 
         Debug.Log("User added and saved to JSON.");
+
+        // 입력 필드 초기화
+        usernameInput.text = string.Empty;
+        passwordInput.text = string.Empty;
+
         signupPanel.SetActive(false);
 
         // 경로를 출력
         Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
+    }
+
+    bool IsUsernameExists(string username)
+    {
+        foreach (User user in userList.users)
+        {
+            if (user.id == username)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void ShowPopup(string message)
+    {
+        popupPanel.SetActive(true);
+        errorMessage.text = message;
+    }
+
+    void ClosePopup()
+    {
+        popupPanel.SetActive(false);
     }
 }
