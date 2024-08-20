@@ -1,0 +1,4 @@
+#Tue Aug 20 12:47:42 KST 2024
+base.0=/Users/keum/IAKKA-main/testTank/Library/Bee/Android/Prj/Mono2x/Gradle/launcher/build/intermediates/dex/release/mergeDexRelease/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
