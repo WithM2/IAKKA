@@ -33,6 +33,9 @@ public class QuizManager : MonoBehaviour
 
     void Start()
     {
+        Screen.orientation = ScreenOrientation.Portrait; //세로 방향
+
+
         // 초기 점수 설정
         UpdateScoreText();
 

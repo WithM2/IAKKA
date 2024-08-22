@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class LoginManager : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class LoginManager : MonoBehaviour
 
     void Start()
     {
+        Screen.orientation = ScreenOrientation.LandscapeLeft; //반 시계방향으로 회전
+
+
         // 경로 설정
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
 
@@ -30,6 +34,7 @@ public class LoginManager : MonoBehaviour
         deleteUserDataButton.onClick.AddListener(OnDeleteUserDataClick);
 
         popupPanel.SetActive(false);
+        LoadUserData();
     }
 
     void LoadUserData()
@@ -64,6 +69,10 @@ public class LoginManager : MonoBehaviour
             Debug.Log("Login Successful");
             popupPanel.SetActive(false); // 로그인 성공 시 팝업 닫기
             // 로그인 성공 시 다음 화면으로 이동하거나 다른 동작을 수행합니다.
+            
+            SceneManager.LoadScene("Main"); //main으로 이동
+            
+            BattleGameManager.ID += $"{username}"; // 로그인한 아이디 정보 battle 씬으로 전송
         }
         else
         {
@@ -103,6 +112,8 @@ public class LoginManager : MonoBehaviour
         File.WriteAllText(filePath, JsonUtility.ToJson(userList, true));
         Debug.Log("All user data deleted.");
         ShowPopup("All user data deleted.");
+        SignupManager.LoadUserData(); // 이 코드가 없으면 SignUpManager에는 
+                                      //유저 정보가 남아있어서 삭제된 아이디로 재가입 불가능 "금교원"
     }
 
     bool IsValidUser(string username, string password)

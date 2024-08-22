@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ArduinoBluetoothAPI;
 using TMPro;
+using System.IO;
 
 
 public class bluetooth : MonoBehaviour
@@ -14,6 +15,14 @@ public class bluetooth : MonoBehaviour
     public GameObject BTname_obj;
     public TMP_InputField BTname_txt;
 
+    private string filePath;
+    private UserList userList;
+
+    void Awake()
+    {
+        
+    }
+
     void Start()
     {
         BluetoothHelper.BLE = false; // BLE 대신 클래식 블루투스 사용
@@ -21,8 +30,14 @@ public class bluetooth : MonoBehaviour
         helper.OnConnected += OnConnected;     // 연결성공 시 호출할 매서드
         helper.OnConnectionFailed += OnConnectionFailed; // 연결 실패시 호출할 매서드
         helper.OnDataReceived += OnDataReceived;  // 데이터 수신 시 호출할 메서드
-        helper.setFixedLengthBasedStream(1); // 1바이트씩 데이터 수신
+        helper.setFixedLengthBasedStream(60); // 1바이트씩 데이터 수신
         //helper.setDeviceName("HC-06"); // 테스트 코드 : 연결할 블루투스 이름
+
+
+        // 경로 설정 (Resources 폴더는 빌드 후에는 쓰기 불가능하므로 Application.persistentDataPath 사용)
+        filePath = Path.Combine(Application.persistentDataPath, "users.json");
+        LoadUserData();
+
     }
 
     void OnConnected(BluetoothHelper helper)  // 연결 성공 시
@@ -34,9 +49,7 @@ public class bluetooth : MonoBehaviour
         BTname_obj.SetActive(false);
 
 
-        sendData(HP_ATT.my_ATT); // 아두이노로 전송
-        sendData(HP_ATT.my_HP);  // 아두이노로 전송'
-        
+        //sendData(BattleGameManager.my_ATT); // 아두이노로 전송
     }
 
     void OnConnectionFailed(BluetoothHelper helper) // 연결 실패 시
@@ -45,7 +58,6 @@ public class bluetooth : MonoBehaviour
         BT_connect_btn.SetActive(true);
         BT_disconnect_btn.SetActive(false);
         BTname_obj.SetActive(true);
-
     }
 
     void OnDataReceived(BluetoothHelper helper)
@@ -90,9 +102,53 @@ public class bluetooth : MonoBehaviour
         Debug.Log("OnDestroy");
     }
 
-    public void sendData(int value)
+    public void sendData(string value)
     {
-        string stringValue = value.ToString(); // 정수를 문자열로 변환
-        helper.SendData(stringValue); // 데이터 전송
+        try
+        {
+            if (helper != null && helper.isConnected())
+            {
+                helper.SendData(value); // 데이터 전송
+                Debug.Log("Data sent: " + value);
+           }
+           else
+            {
+                Debug.LogWarning("Bluetooth is not connected.");
+          }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Failed to send data: " + ex.Message);
+        }
+    }
+
+    void LoadUserData()
+    {
+        string jsonText = File.ReadAllText(filePath);
+        userList = JsonUtility.FromJson<UserList>(jsonText);
+    }
+
+    public void testbutton()
+    {
+        try{
+            LoadUserData();
+
+            string userData = "";
+            // json 직렬화해서 전달
+            userData += "{";
+            foreach (User user in userList.users)
+            {
+                if(user.id == "player1" && user.id != null){
+                    userData += $"\"my_HP\":\"{user.HP}\",\"my_ATT\":\"{user.ATT}\"";
+                }
+            }
+            userData += "}\0";
+            sendData(userData);
+            Debug.Log("testbutton clicked");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("test Failed: " + ex.Message);
+        }
     }
 }

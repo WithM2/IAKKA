@@ -6,6 +6,8 @@ public class User
 {
     public string id;
     public string password;
+    public string HP;
+    public string ATT;
 }
 
 [System.Serializable]

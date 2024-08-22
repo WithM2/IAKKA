@@ -19,4 +19,18 @@ public class GameScencesMove : MonoBehaviour
 
         Debug.Log("Moved to Main");
     }
+    public void MoveTO_LoginScene()
+    {
+        SceneManager.LoadScene("LoginScene");
+        // " " 안에 이동할 씬이름 입력
+
+        Debug.Log("Moved to LoginScene");
+    }
+    public void MoveTo_QuizScene()
+    {
+        SceneManager.LoadScene("QuizScene");
+        // " " 안에 이동할 씬이름 입력
+
+        Debug.Log("Moved to QuizScene");
+    }
 }

@@ -15,8 +15,8 @@ public class SignupManager : MonoBehaviour
     public TextMeshProUGUI errorMessage; // 오류 메시지를 표시할 TextMeshPro
     public GameObject popupPanel; // 팝업 패널
 
-    private string filePath;
-    private UserList userList;
+    private static string filePath; // static추가
+    private static UserList userList; // static추가
 
     void Start()
     {
@@ -33,7 +33,7 @@ public class SignupManager : MonoBehaviour
         signupPanel.SetActive(false);
     }
 
-    void LoadUserData()
+    public static void LoadUserData() // static추가
     {
         if (File.Exists(filePath))
         {
@@ -88,7 +88,9 @@ public class SignupManager : MonoBehaviour
         }
 
         // 기존 데이터에 새로운 사용자 추가
-        userList.users.Add(new User { id = username, password = password });
+        userList.users.Add(new User { id = username, password = password, HP = "", ATT = ""});
+        //  HP, ATT 정보추가"금교원"
+
 
         // JSON 파일에 저장
         string updatedJson = JsonUtility.ToJson(userList, true);
