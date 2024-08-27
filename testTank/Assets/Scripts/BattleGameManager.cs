@@ -26,7 +26,7 @@ public class BattleGameManager : MonoBehaviour
         LoadUserData();
         Debug.Log($"Login ID : {ID}");
 
-        testcode(); // json파일에 데이터 임시로 HP와 ATT 값 넣어놓음
+        testcode(); // json파일에 HP와 ATT 값 저장하는 코드 (나중에 지움)
 
         //foreach부터 시작
         foreach (User user in userList.users) //로그인 정보 가져오기
@@ -36,6 +36,7 @@ public class BattleGameManager : MonoBehaviour
                 my_HP = int.Parse(user.HP);
                 my_ATT = int.Parse(user.ATT);
                 Debug.Log($"\"my_HP : {my_HP}\"\n\"my_ATT : {my_ATT}\"");
+                // json에서 데이터 가져오기
             }
         }
     }

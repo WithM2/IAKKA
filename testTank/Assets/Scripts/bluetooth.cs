@@ -128,7 +128,7 @@ public class bluetooth : MonoBehaviour
         userList = JsonUtility.FromJson<UserList>(jsonText);
     }
 
-    public void testbutton()
+    public void testbutton() // 버튼 누르면 아두이노로 상태정보 json직렬화한 문자열 형태로 전송
     {
         try{
             LoadUserData();
@@ -142,7 +142,7 @@ public class bluetooth : MonoBehaviour
                     userData += $"\"my_HP\":\"{user.HP}\",\"my_ATT\":\"{user.ATT}\"";
                 }
             }
-            userData += "}\0";
+            userData += "}\0"; // 아두이노가 데이터를 수신할 때 데이터의 마지막임을 알 수 있는 표시
             sendData(userData);
             Debug.Log("testbutton clicked");
         }
