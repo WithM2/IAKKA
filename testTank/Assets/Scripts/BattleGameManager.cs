@@ -41,13 +41,6 @@ public class BattleGameManager : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void LoadUserData()
     {
         string jsonText = File.ReadAllText(filePath);
@@ -79,4 +72,5 @@ public class BattleGameManager : MonoBehaviour
             }
         }
     }
+
 }

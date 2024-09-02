@@ -1,22 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // TextMeshPro 관련 네임스페이스
+using TMPro;
 
 public class QuizManager : MonoBehaviour
 {
+    // UI 요소들
     public TextMeshProUGUI questionText;
-    public TextMeshProUGUI scoreText; // 점수를 표시할 UI 요소
-    public Button[] optionButtons; // 5개의 버튼을 위한 배열
-    public TextMeshProUGUI[] optionTexts; // 버튼 텍스트를 위한 배열
+    public TextMeshProUGUI scoreText;
+    public Button[] optionButtons; // 5개의 버튼을 위한 배열 (오지선다)
+    public TextMeshProUGUI[] optionTexts; // 오지선다 버튼 텍스트를 위한 배열
+    public GameObject multipleChoicePanel; // 오지선다 패널
+    public GameObject oxPanel; // OX 패널
+    public GameObject shortAnswerPanel; // 단답 패널
+    public Button trueButton, falseButton; // OX 버튼들
+    public TMP_InputField shortAnswerInput; // 단답 입력 필드
+    public Button submitButton; // 단답 제출 버튼
 
     private int currentQuestionIndex = 0;
-    private int score = 0; // 점수 변수
+    private int score = 0;
 
-    // 질문과 선택지를 설정합니다.
+    // 문제와 유형들
     private string[] questions = {
         "What is the capital of France?",
         "What is 2 + 2?",
-        "Which planet is known as the Red Planet?",
+        "Is the Earth flat?",
         "What is the largest ocean on Earth?",
         "Who wrote 'To Kill a Mockingbird'?"
     };
@@ -24,27 +31,35 @@ public class QuizManager : MonoBehaviour
     private string[][] options = {
         new string[] { "Berlin", "Madrid", "Paris", "Rome", "London" },
         new string[] { "3", "4", "5", "6", "7" },
-        new string[] { "Earth", "Mars", "Jupiter", "Saturn", "Venus" },
+        null, // OX 문제는 선택지가 없음
         new string[] { "Atlantic", "Indian", "Arctic", "Pacific", "Southern" },
-        new string[] { "Harper Lee", "Mark Twain", "J.K. Rowling", "Ernest Hemingway", "George Orwell" }
+        null // 단답형 문제는 선택지가 없음
     };
 
-    private int[] correctAnswers = { 2, 1, 1, 3, 0 }; // 0-based index of correct answers
+    private int[] correctAnswers = { 2, 1, 1, 3, 0 };
+    private string[] questionTypes = { "MultipleChoice", "MultipleChoice", "OX", "MultipleChoice", "ShortAnswer" };
+    private string[] shortAnswers = { null, null, null, null, "Harper Lee" }; // 단답형 답안
 
     void Start()
     {
-        Screen.orientation = ScreenOrientation.Portrait; //세로 방향
+        Screen.orientation = ScreenOrientation.Portrait; // 세로방향을 고정
 
-
-        // 초기 점수 설정
         UpdateScoreText();
 
-        // 버튼 클릭 이벤트 연결
+        // 오지선다 버튼 클릭 이벤트 연결
         for (int i = 0; i < optionButtons.Length; i++)
         {
-            int index = i; // 지역 변수로 복사
+            int index = i;
             optionButtons[i].onClick.AddListener(() => OnOptionButtonClick(index));
         }
+
+        // OX 버튼 클릭 이벤트 연결
+        trueButton.onClick.AddListener(() => OnOXButtonClick(true));
+        falseButton.onClick.AddListener(() => OnOXButtonClick(false));
+
+        // 단답 제출 버튼 클릭 이벤트 연결
+        submitButton.onClick.AddListener(OnSubmitButtonClick);
+
         DisplayQuestion();
     }
 
@@ -56,44 +71,95 @@ public class QuizManager : MonoBehaviour
             return;
         }
 
-        // 질문과 옵션을 표시합니다.
+        // 패널 초기화 (모두 비활성화)
+        multipleChoicePanel.SetActive(false);
+        oxPanel.SetActive(false);
+        shortAnswerPanel.SetActive(false);
+
         questionText.text = questions[currentQuestionIndex];
 
-        for (int i = 0; i < optionButtons.Length; i++)
+        // 질문 유형에 따른 패널 활성화
+        string questionType = questionTypes[currentQuestionIndex];
+        if (questionType == "MultipleChoice")
         {
-            optionTexts[i].text = options[currentQuestionIndex][i];
-            optionButtons[i].interactable = true; // 버튼을 활성화합니다.
+            multipleChoicePanel.SetActive(true);
+            for (int i = 0; i < optionButtons.Length; i++)
+            {
+                optionTexts[i].text = options[currentQuestionIndex][i];
+                optionButtons[i].interactable = true;
+            }
+        }
+        else if (questionType == "OX")
+        {
+            oxPanel.SetActive(true);
+        }
+        else if (questionType == "ShortAnswer")
+        {
+            shortAnswerPanel.SetActive(true);
+            shortAnswerInput.text = ""; // 입력 필드 초기화
         }
     }
 
     void OnOptionButtonClick(int index)
     {
-        // 선택된 답안을 확인합니다.
         if (index == correctAnswers[currentQuestionIndex])
         {
             Debug.Log("Correct!");
-            score++; // 정답을 맞췄을 때 점수 증가
-            UpdateScoreText(); // 점수 텍스트 업데이트
+            score++;
+            UpdateScoreText();
         }
         else
         {
             Debug.Log("Wrong!");
         }
 
-        // 버튼 클릭 후, 버튼을 비활성화합니다.
         foreach (Button button in optionButtons)
         {
             button.interactable = false;
         }
 
-        // 다음 문제로 넘어갑니다.
         currentQuestionIndex++;
-        Invoke("DisplayQuestion", 1f); // 1초 지연 후 다음 질문 표시
+        Invoke("DisplayQuestion", 1f);
+    }
+
+    void OnOXButtonClick(bool isTrue)
+    {
+        bool correct = (isTrue && correctAnswers[currentQuestionIndex] == 1) || (!isTrue && correctAnswers[currentQuestionIndex] == 0);
+        if (correct)
+        {
+            Debug.Log("Correct!");
+            score++;
+            UpdateScoreText();
+        }
+        else
+        {
+            Debug.Log("Wrong!");
+        }
+
+        currentQuestionIndex++;
+        Invoke("DisplayQuestion", 1f);
+    }
+
+    void OnSubmitButtonClick()
+    {
+        string userAnswer = shortAnswerInput.text;
+        if (userAnswer.Equals(shortAnswers[currentQuestionIndex], System.StringComparison.OrdinalIgnoreCase))
+        {
+            Debug.Log("Correct!");
+            score++;
+            UpdateScoreText();
+        }
+        else
+        {
+            Debug.Log("Wrong!");
+        }
+
+        currentQuestionIndex++;
+        Invoke("DisplayQuestion", 1f);
     }
 
     void UpdateScoreText()
     {
-        // 점수를 표시하는 텍스트 업데이트
         scoreText.text = "Score: " + score.ToString();
     }
 }

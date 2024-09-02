@@ -18,9 +18,9 @@ public class bluetooth : MonoBehaviour
     private string filePath;
     private UserList userList;
 
-    void Awake()
-    {
-        
+    class GameData{
+        public int my_HP;  // JSON의 my_HP와 일치
+        public int my_ATT; // JSON의 my_ATT와 일치
     }
 
     void Start()
@@ -30,7 +30,8 @@ public class bluetooth : MonoBehaviour
         helper.OnConnected += OnConnected;     // 연결성공 시 호출할 매서드
         helper.OnConnectionFailed += OnConnectionFailed; // 연결 실패시 호출할 매서드
         helper.OnDataReceived += OnDataReceived;  // 데이터 수신 시 호출할 메서드
-        helper.setFixedLengthBasedStream(60); // 1바이트씩 데이터 수신
+        //helper.setFixedLengthBasedStream(1); // 1바이트씩 데이터 수신
+        helper.setTerminatorBasedStream("\n"); // "\n"까지 수신
         //helper.setDeviceName("HC-06"); // 테스트 코드 : 연결할 블루투스 이름
 
 
@@ -50,6 +51,7 @@ public class bluetooth : MonoBehaviour
 
 
         //sendData(BattleGameManager.my_ATT); // 아두이노로 전송
+        //FirstDataToArduino(); 주석해제
     }
 
     void OnConnectionFailed(BluetoothHelper helper) // 연결 실패 시
@@ -62,18 +64,42 @@ public class bluetooth : MonoBehaviour
 
     void OnDataReceived(BluetoothHelper helper)
     {
+        //임시로 코드임. 상대 HP 정보 불러오기 + 데미지 시스템
         string msg = helper.Read();
-        switch(msg)
-        {
-            case "1":
-                break;
-            case "0":
-                break;
-            default:
-                Debug.Log($"Received unknown message [{msg}]");
-                break;
-            }
+        if(msg == "1"){
+            int number = int.Parse(msg); // 문자열을 int로 변환
+            Debug.Log("Converted number: " + number);
+            BattleGameManager.my_HP -= BattleGameManager.your_ATT;
         }
+        else if(msg == "0"){
+            BattleGameManager.your_HP -= BattleGameManager.my_ATT;
+        }
+        else if(msg.Length > 25 && msg.Length < 60){// 수신되는 데이터의 예상 길이 범위
+            // Json 역직렬화
+            GameData gameData = JsonUtility.FromJson<GameData>(msg); // JSON 데이터 역직렬화
+            Debug.Log($"Received Data - HP: {gameData.my_HP}, ATT: {gameData.my_ATT}");
+
+            // 상대 능력치 저장하는 코드
+            BattleGameManager.your_HP = gameData.my_HP;
+            BattleGameManager.your_ATT = gameData.my_ATT;
+        }
+        else{
+            Debug.Log($"Receive Error");
+        }
+    }
+
+    private void ProcessReceivedData(string data)
+    {
+        try
+        {
+            GameData gameData = JsonUtility.FromJson<GameData>(data); // JSON 데이터 역직렬화
+            Debug.Log($"Received Data - HP: {gameData.my_HP}, ATT: {gameData.my_ATT}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Error parsing JSON: {e.Message}"); // JSON 파싱 오류 처리
+        }
+    }
 
     public void BTname_change()
     {
@@ -122,13 +148,9 @@ public class bluetooth : MonoBehaviour
         }
     }
 
-    void LoadUserData()
-    {
-        string jsonText = File.ReadAllText(filePath);
-        userList = JsonUtility.FromJson<UserList>(jsonText);
-    }
 
-    public void testbutton() // 버튼 누르면 아두이노로 상태정보 json직렬화한 문자열 형태로 전송
+
+    public void FirstDataToArduino() // 버튼 누르면 아두이노로 상태정보 json직렬화한 문자열 형태로 전송
     {
         try{
             LoadUserData();
@@ -144,11 +166,19 @@ public class bluetooth : MonoBehaviour
             }
             userData += "}\0"; // 아두이노가 데이터를 수신할 때 데이터의 마지막임을 알 수 있는 표시
             sendData(userData);
-            Debug.Log("testbutton clicked");
+            Debug.Log("First Data is sent to Arduino");
         }
         catch (System.Exception ex)
         {
             Debug.LogError("test Failed: " + ex.Message);
         }
     }
+
+
+    void LoadUserData()
+    {
+        string jsonText = File.ReadAllText(filePath);
+        userList = JsonUtility.FromJson<UserList>(jsonText);
+    }
+
 }
