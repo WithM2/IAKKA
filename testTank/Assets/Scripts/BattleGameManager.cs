@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.IO;
-
+using System;
+using System.Text;
+using System.IO.Ports;
 
 public class BattleGameManager : MonoBehaviour
 {
@@ -18,26 +20,49 @@ public class BattleGameManager : MonoBehaviour
     private string filePath;
     private UserList userList;
 
-    // Start is called before the first frame update
+    private SerialPort serialPort;
+    
+    private string portName = "testPort";   // MacOS 환경이면 포트 이름을 새로 지정해야함
+
+    private int baudRate = 9600;
+
     void Start()
     {
-        Screen.orientation = ScreenOrientation.LandscapeLeft; //반 시계방향으로 회전
+        Screen.orientation = ScreenOrientation.LandscapeLeft; // 반 시계방향으로 회전
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
         LoadUserData();
         Debug.Log($"Login ID : {ID}");
 
-        testcode(); // json파일에 HP와 ATT 값 저장하는 코드 (나중에 지움)
+        testcode(); // json 파일에 HP와 ATT 값 저장하는 코드 (나중에 지움)
 
-        //foreach부터 시작
-        foreach (User user in userList.users) //로그인 정보 가져오기
+        foreach (User user in userList.users) // 로그인 정보 가져오기
         {
             if (user.id == ID)
             {
                 my_HP = int.Parse(user.HP);
                 my_ATT = int.Parse(user.ATT);
                 Debug.Log($"\"my_HP : {my_HP}\"\n\"my_ATT : {my_ATT}\"");
-                // json에서 데이터 가져오기
+
+                // 데이터 전송
+                SendDataToArduino(my_HP, my_ATT);
             }
+        }
+
+        // Serial 포트 초기화 및 열기
+        InitializeSerialPort();
+    }
+
+    void InitializeSerialPort()
+    {
+        try
+        {
+            serialPort = new SerialPort(portName, baudRate);
+            serialPort.Open();
+            Debug.Log("Serial port opened successfully.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to open serial port: {e.Message}");
         }
     }
 
@@ -47,17 +72,24 @@ public class BattleGameManager : MonoBehaviour
         userList = JsonUtility.FromJson<UserList>(jsonText);
     }
 
-    void OnDestroy() //ID 초기화(클리어)
+    void OnDestroy() // ID 초기화(클리어)
     {
         ID = null;
-        if (ID == null){
+        if (ID == null)
+        {
             Debug.Log("Login information clear");
+        }
+
+        if (serialPort != null && serialPort.IsOpen)
+        {
+            serialPort.Close();
+            Debug.Log("Serial port closed.");
         }
     }
 
     void testcode() // 나중에 지우기
     {
-        foreach (User user in userList.users) //로그인 정보 넣기
+        foreach (User user in userList.users) // 로그인 정보 넣기
         {
             if (user.id == ID)
             {
@@ -73,4 +105,17 @@ public class BattleGameManager : MonoBehaviour
         }
     }
 
+    void SendDataToArduino(int hp, int att)
+    {
+        if (serialPort != null && serialPort.IsOpen)
+        {
+            string message = $"HP:{hp},ATT:{att}\n";
+            serialPort.WriteLine(message); // 데이터를 직렬 포트로 전송
+            Debug.Log($"Data sent to Arduino: {message}");
+        }
+        else
+        {
+            Debug.LogError("Serial port is not open.");
+        }
+    }
 }
