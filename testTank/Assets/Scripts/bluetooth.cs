@@ -15,6 +15,9 @@ public class bluetooth : MonoBehaviour
     public GameObject BTname_obj;
     public TMP_InputField BTname_txt;
 
+    public TMP_Text my_ATT_text;
+    public TMP_Text your_ATT_text;
+
     private string filePath;
     private UserList userList;
 
@@ -38,7 +41,6 @@ public class bluetooth : MonoBehaviour
         // 경로 설정 (Resources 폴더는 빌드 후에는 쓰기 불가능하므로 Application.persistentDataPath 사용)
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
         LoadUserData();
-
     }
 
     void OnConnected(BluetoothHelper helper)  // 연결 성공 시
@@ -49,9 +51,9 @@ public class bluetooth : MonoBehaviour
         BT_disconnect_btn.SetActive(true);
         BTname_obj.SetActive(false);
 
-
+        Debug.Log("FirstDataToArduino - start");
         //sendData(BattleGameManager.my_ATT); // 아두이노로 전송
-        //FirstDataToArduino(); 주석해제
+        FirstDataToArduino(); //주석해제
     }
 
     void OnConnectionFailed(BluetoothHelper helper) // 연결 실패 시
@@ -82,6 +84,9 @@ public class bluetooth : MonoBehaviour
             // 상대 능력치 저장하는 코드
             BattleGameManager.your_HP = gameData.my_HP;
             BattleGameManager.your_ATT = gameData.my_ATT;
+
+            my_ATT_text.text = $"{BattleGameManager.my_ATT}"; // text 표시
+            your_ATT_text.text = $"{BattleGameManager.your_ATT}";
         }
         else{
             Debug.Log($"Receive Error");
@@ -105,8 +110,6 @@ public class bluetooth : MonoBehaviour
     {
         Debug.Log(BTname_txt.text);
         helper.setDeviceName(BTname_txt.text); // 연결할 블루투스 이름
-        //helper.setDeviceName("HC-06"); // 테스트
-
     }
 
     public void Connect() // connect 버튼 누르면 호출됨
@@ -154,7 +157,6 @@ public class bluetooth : MonoBehaviour
     {
         try{
             LoadUserData();
-
             string userData = "";
             // json 직렬화해서 전달
             userData += "{";
@@ -164,7 +166,7 @@ public class bluetooth : MonoBehaviour
                     userData += $"\"my_HP\":\"{user.HP}\",\"my_ATT\":\"{user.ATT}\"";
                 }
             }
-            userData += "}\0"; // 아두이노가 데이터를 수신할 때 데이터의 마지막임을 알 수 있는 표시
+            userData += "}\n"; // 아두이노가 데이터를 수신할 때 데이터의 마지막임을 알 수 있는 표시
             sendData(userData);
             Debug.Log("First Data is sent to Arduino");
         }
@@ -174,11 +176,9 @@ public class bluetooth : MonoBehaviour
         }
     }
 
-
     void LoadUserData()
     {
         string jsonText = File.ReadAllText(filePath);
         userList = JsonUtility.FromJson<UserList>(jsonText);
     }
-
 }

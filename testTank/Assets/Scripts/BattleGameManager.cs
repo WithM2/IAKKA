@@ -22,7 +22,7 @@ public class BattleGameManager : MonoBehaviour
 
     private SerialPort serialPort;
     
-    private string portName = "testPort";   // MacOS 환경이면 포트 이름을 새로 지정해야함
+    private string portName = "/dev/cu.P1_unity";   // MacOS 환경이면 포트 이름을 새로 지정해야함
 
     private int baudRate = 9600;
 
@@ -44,12 +44,12 @@ public class BattleGameManager : MonoBehaviour
                 Debug.Log($"\"my_HP : {my_HP}\"\n\"my_ATT : {my_ATT}\"");
 
                 // 데이터 전송
-                SendDataToArduino(my_HP, my_ATT);
+                //SendDataToArduino(my_HP, my_ATT);
             }
         }
 
         // Serial 포트 초기화 및 열기
-        InitializeSerialPort();
+        //InitializeSerialPort();
     }
 
     void InitializeSerialPort()
@@ -97,10 +97,11 @@ public class BattleGameManager : MonoBehaviour
                 int b = 10;
                 user.HP = $"{a}";
                 user.ATT = $"{b}";
-                Debug.Log($"\"user.HP : {user.HP}\"\n\"user.ATT : {user.ATT}\"");
+                //Debug.Log($"\"user.HP : {user.HP}\"\n\"user.ATT : {user.ATT}\"");
 
                 string updatedJson = JsonUtility.ToJson(userList, true); // json에 저장
                 File.WriteAllText(filePath, updatedJson);
+                Debug.Log("testcode 실행 성공");
             }
         }
     }
