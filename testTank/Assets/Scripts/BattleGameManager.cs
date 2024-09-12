@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.IO;
 using System;
@@ -9,22 +10,33 @@ using System.IO.Ports;
 
 public class BattleGameManager : MonoBehaviour
 {
-    public static string ID = "";
+    public static string ID = ""; // 로그인 ID 정보
 
+
+    // 인게임 플레이 관련
     public static int my_HP;
     public static int my_ATT;
-
     public static int your_HP;
     public static int your_ATT;
+    public static TMP_Text my_ATT_text; // HP_text_control에서 관리하기
+    public static TMP_Text your_ATT_text; // HP_text_control에서 관리하기
+    public static Slider my_HP_Slider; // 코딩하기
+    public static Slider your_HP_Slider; // 코딩하기
 
+    //
+
+    // 로컬 data 관련
     private string filePath;
     private UserList userList;
+    //
 
+    // 앱 빌드시 주석 {
     private SerialPort serialPort;
-    
     private string portName = "/dev/cu.P1_unity";   // MacOS 환경이면 포트 이름을 새로 지정해야함
-
     private int baudRate = 9600;
+    //  앱 빌드시 주석 }
+
+
 
     void Start()
     {
@@ -48,6 +60,7 @@ public class BattleGameManager : MonoBehaviour
             }
         }
 
+        my_ATT_text.text = $"ATT : {my_HP}";
         // Serial 포트 초기화 및 열기
         //InitializeSerialPort();
     }
@@ -118,5 +131,9 @@ public class BattleGameManager : MonoBehaviour
         {
             Debug.LogError("Serial port is not open.");
         }
+    }
+    public static void HP_text_control() // 
+    {
+
     }
 }

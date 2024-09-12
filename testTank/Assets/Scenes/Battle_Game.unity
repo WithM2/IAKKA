@@ -528,8 +528,7 @@ MonoBehaviour:
   BT_disconnect_btn: {fileID: 1844151211}
   BTname_obj: {fileID: 399672775}
   BTname_txt: {fileID: 399672777}
-  my_ATT_text: {fileID: 648446161}
-  your_ATT_text: {fileID: 2093393642}
+  mjpegstreamReader: {fileID: 1091557513}
 --- !u!1 &213109398
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,7 +1659,8 @@ GameObject:
   - component: {fileID: 1091557511}
   - component: {fileID: 1091557510}
   - component: {fileID: 1091557509}
-  - component: {fileID: 1091557508}
+  - component: {fileID: 1091557513}
+  - component: {fileID: 1091557512}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -1687,20 +1687,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1280, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1091557508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091557506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0564cf72d157843ed85cd60251e1b559, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rawImage: {fileID: 1091557510}
-  esp32CamURL: http://192.168.35.95/capture
 --- !u!223 &1091557509
 Canvas:
   m_ObjectHideFlags: 0
@@ -1759,6 +1745,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091557506}
   m_CullTransparentMesh: 1
+--- !u!114 &1091557512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091557506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db157922e088048828a098b9fe64073f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1091557513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091557506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4491432c5c4ae4ca887587bab3db6648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RawImage: {fileID: 0}
+  mjpegUrl: http://192.168.35.95:81/stream
+  rawImageDisplay: {fileID: 1091557510}
 --- !u!1 &1096151083
 GameObject:
   m_ObjectHideFlags: 0

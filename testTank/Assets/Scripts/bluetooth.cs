@@ -9,18 +9,23 @@ using System.IO;
 
 public class bluetooth : MonoBehaviour
 {
-    private BluetoothHelper helper;
+    // 블루투스 관련
+    private BluetoothHelper helper; // 블루투스 객체
     public GameObject BT_connect_btn;
     public GameObject BT_disconnect_btn;
     public GameObject BTname_obj;
     public TMP_InputField BTname_txt;
+    //
 
-    public TMP_Text my_ATT_text;
-    public TMP_Text your_ATT_text;
-
+    // 로컬 data 관련
     private string filePath;
     private UserList userList;
+    //
 
+    // 카메라 제어
+    public MjpegStreamReader mjpegstreamReader; // MjpegStreamReader.cs 참조
+
+    // json데이터 임시저장 장치
     class GameData{
         public int my_HP;  // JSON의 my_HP와 일치
         public int my_ATT; // JSON의 my_ATT와 일치
@@ -36,7 +41,6 @@ public class bluetooth : MonoBehaviour
         //helper.setFixedLengthBasedStream(1); // 1바이트씩 데이터 수신
         helper.setTerminatorBasedStream("\n"); // "\n"까지 수신
         //helper.setDeviceName("HC-06"); // 테스트 코드 : 연결할 블루투스 이름
-
 
         // 경로 설정 (Resources 폴더는 빌드 후에는 쓰기 불가능하므로 Application.persistentDataPath 사용)
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
@@ -54,6 +58,8 @@ public class bluetooth : MonoBehaviour
         Debug.Log("FirstDataToArduino - start");
         //sendData(BattleGameManager.my_ATT); // 아두이노로 전송
         FirstDataToArduino(); //주석해제
+
+        mjpegstreamReader.camera_control(true); // 카레마 화면 활성화
     }
 
     void OnConnectionFailed(BluetoothHelper helper) // 연결 실패 시
@@ -66,16 +72,19 @@ public class bluetooth : MonoBehaviour
 
     void OnDataReceived(BluetoothHelper helper)
     {
-        //임시로 코드임. 상대 HP 정보 불러오기 + 데미지 시스템
         string msg = helper.Read();
+
+        // 데미지 받음
         if(msg == "1"){
-            int number = int.Parse(msg); // 문자열을 int로 변환
-            Debug.Log("Converted number: " + number);
+            Debug.Log("receive: " + msg);
             BattleGameManager.my_HP -= BattleGameManager.your_ATT;
         }
+        // 데미지 가함
         else if(msg == "0"){
+            Debug.Log("receive: " + msg);
             BattleGameManager.your_HP -= BattleGameManager.my_ATT;
         }
+        // 상대 정보 불러옴
         else if(msg.Length > 25 && msg.Length < 60){// 수신되는 데이터의 예상 길이 범위
             // Json 역직렬화
             GameData gameData = JsonUtility.FromJson<GameData>(msg); // JSON 데이터 역직렬화
@@ -85,11 +94,11 @@ public class bluetooth : MonoBehaviour
             BattleGameManager.your_HP = gameData.my_HP;
             BattleGameManager.your_ATT = gameData.my_ATT;
 
-            my_ATT_text.text = $"{BattleGameManager.my_ATT}"; // text 표시
-            your_ATT_text.text = $"{BattleGameManager.your_ATT}";
+            BattleGameManager.my_ATT_text.text = $"{BattleGameManager.my_ATT}"; // text 표시
+            BattleGameManager.your_ATT_text.text = $"{BattleGameManager.your_ATT}";
         }
         else{
-            Debug.Log($"Receive Error");
+            Debug.Log($"Receive Error: " + msg);
         }
     }
 
