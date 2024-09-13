@@ -512,6 +512,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39aa6316259ca45b9951549d33a93dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  my_ATT_text: {fileID: 648446161}
+  your_ATT_text: {fileID: 2093393642}
 --- !u!114 &186501505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143865c685d314a4ca4c2edbf51ecc74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleGameManager: {fileID: 186501504}
   BT_connect_btn: {fileID: 64502969}
   BT_disconnect_btn: {fileID: 1844151211}
   BTname_obj: {fileID: 399672775}
@@ -1769,7 +1772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4491432c5c4ae4ca887587bab3db6648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RawImage: {fileID: 0}
+  RawImage: {fileID: 1091557506}
   mjpegUrl: http://192.168.35.95:81/stream
   rawImageDisplay: {fileID: 1091557510}
 --- !u!1 &1096151083

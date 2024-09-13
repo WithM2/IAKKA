@@ -1,15 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - BattleGameManager
-    - GameScencesMove
-    - LoginManager
-    - MainManager
-    - MjpegStreamReader
-    - QuizManager
-    - SignupManager
-    - UnityMainThreadDispatcher
-    - bluetooth
+    - LedOnOffManager
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.Animation.Runtime.dll:
@@ -22,6 +14,7 @@ ScriptsOnlyBuild:
     - UnityEditor.Tilemaps.GridBrushEditor
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
+    - UnityEditor.Tilemaps.GridPalettes
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.SceneViewOpenTilePaletteHelper
     - UnityEditor.Tilemaps.TileDragAndDropManager
@@ -42,11 +35,9 @@ ScriptsOnlyBuild:
     - TMPro.TMP_StyleSheet
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset
-    - TMPro.TMP_InputField
     - TMPro.TMP_Settings
     - TMPro.TMP_SpriteAsset
     - TMPro.TMP_StyleSheet
-    - TMPro.TextMeshProUGUI
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -58,10 +49,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
-    - UnityEngine.UI.LayoutElement
-    - UnityEngine.UI.RawImage
-    - UnityEngine.UI.RectMask2D
-    - UnityEngine.UI.Slider
+    - UnityEngine.UI.Text
   serializedClasses:
     Unity.TextMeshPro:
     - TMPro.FaceInfo_Legacy
@@ -73,16 +61,10 @@ ScriptsOnlyBuild:
     - TMPro.TMP_GlyphAdjustmentRecord
     - TMPro.TMP_GlyphPairAdjustmentRecord
     - TMPro.TMP_GlyphValueRecord
-    - TMPro.TMP_InputField/OnChangeEvent
-    - TMPro.TMP_InputField/SelectionEvent
-    - TMPro.TMP_InputField/SubmitEvent
-    - TMPro.TMP_InputField/TextSelectionEvent
-    - TMPro.TMP_InputField/TouchScreenKeyboardEvent
     - TMPro.TMP_Sprite
     - TMPro.TMP_SpriteCharacter
     - TMPro.TMP_SpriteGlyph
     - TMPro.TMP_Style
-    - TMPro.VertexGradient
     UnityEngine.CoreModule:
     - UnityEngine.Events.ArgumentCache
     - UnityEngine.Events.PersistentCallGroup
@@ -96,43 +78,25 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.AnimationTriggers
     - UnityEngine.UI.Button/ButtonClickedEvent
     - UnityEngine.UI.ColorBlock
+    - UnityEngine.UI.FontData
     - UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
     - UnityEngine.UI.Navigation
-    - UnityEngine.UI.Slider/SliderEvent
     - UnityEngine.UI.SpriteState
   methodsToPreserve:
   - assembly: Assembly-CSharp
-    fullTypeName: GameScencesMove
-    methodName: MoveTo_QuizScene
+    fullTypeName: LedOnOffManager
+    methodName: sendData
   - assembly: Assembly-CSharp
-    fullTypeName: GameScencesMove
-    methodName: MoveTo_Battle_Game
+    fullTypeName: LedOnOffManager
+    methodName: Disconnect
   - assembly: Assembly-CSharp
-    fullTypeName: bluetooth
+    fullTypeName: LedOnOffManager
     methodName: Connect
   - assembly: Assembly-CSharp
-    fullTypeName: bluetooth
-    methodName: BTname_change
-  - assembly: Assembly-CSharp
-    fullTypeName: bluetooth
-    methodName: Disconnect
-  - assembly: UnityEngine.CoreModule
-    fullTypeName: UnityEngine.Object
-    methodName: set_name
-  - assembly: UnityEngine.CoreModule
-    fullTypeName: UnityEngine.Object
-    methodName: set_name
-  - assembly: UnityEngine.CoreModule
-    fullTypeName: UnityEngine.Object
-    methodName: set_name
-  - assembly: UnityEngine.CoreModule
-    fullTypeName: UnityEngine.Object
-    methodName: set_name
-  - assembly: UnityEngine.CoreModule
-    fullTypeName: UnityEngine.Object
-    methodName: set_name
+    fullTypeName: LedOnOffManager
+    methodName: sendData
   sceneClasses:
-    Assets/Scenes/Battle_Game.unity:
+    Assets/BluetoothAPI/Samples/Led On Off/LedOnOff.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -141,9 +105,17 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 21
       Script: {instanceID: 0}
+    - Class: 23
+      Script: {instanceID: 0}
     - Class: 28
       Script: {instanceID: 0}
+    - Class: 33
+      Script: {instanceID: 0}
+    - Class: 43
+      Script: {instanceID: 0}
     - Class: 48
+      Script: {instanceID: 0}
+    - Class: 49
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
@@ -155,77 +127,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 114
       Script: {instanceID: 16764}
-    - Class: 114
-      Script: {instanceID: 16902}
-    - Class: 114
-      Script: {instanceID: 17698}
-    - Class: 114
-      Script: {instanceID: 17728}
-    - Class: 114
-      Script: {instanceID: 18096}
-    - Class: 114
-      Script: {instanceID: 18378}
-    - Class: 114
-      Script: {instanceID: 18550}
-    - Class: 114
-      Script: {instanceID: 18754}
-    - Class: 114
-      Script: {instanceID: 20066}
-    - Class: 114
-      Script: {instanceID: 20310}
-    - Class: 114
-      Script: {instanceID: 21144}
-    - Class: 114
-      Script: {instanceID: 21312}
-    - Class: 114
-      Script: {instanceID: 21408}
-    - Class: 114
-      Script: {instanceID: 22148}
-    - Class: 114
-      Script: {instanceID: 22368}
-    - Class: 114
-      Script: {instanceID: 22720}
-    - Class: 114
-      Script: {instanceID: 22800}
-    - Class: 114
-      Script: {instanceID: 24310}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    Assets/Scenes/LoginScene.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 49
-      Script: {instanceID: 0}
-    - Class: 89
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 16764}
-    - Class: 114
-      Script: {instanceID: 16902}
     - Class: 114
       Script: {instanceID: 17526}
     - Class: 114
@@ -237,148 +138,24 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 19946}
     - Class: 114
-      Script: {instanceID: 20066}
-    - Class: 114
       Script: {instanceID: 20088}
     - Class: 114
       Script: {instanceID: 20426}
     - Class: 114
-      Script: {instanceID: 20722}
-    - Class: 114
-      Script: {instanceID: 21144}
+      Script: {instanceID: 21004}
     - Class: 114
       Script: {instanceID: 21408}
     - Class: 114
-      Script: {instanceID: 21692}
+      Script: {instanceID: 21756}
     - Class: 114
       Script: {instanceID: 22148}
-    - Class: 114
-      Script: {instanceID: 22368}
-    - Class: 114
-      Script: {instanceID: 22800}
-    - Class: 114
-      Script: {instanceID: 24310}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    Assets/Scenes/Main.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 89
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 108
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 16764}
-    - Class: 114
-      Script: {instanceID: 18096}
-    - Class: 114
-      Script: {instanceID: 18144}
-    - Class: 114
-      Script: {instanceID: 18378}
-    - Class: 114
-      Script: {instanceID: 18754}
-    - Class: 114
-      Script: {instanceID: 21408}
-    - Class: 114
-      Script: {instanceID: 22148}
-    - Class: 114
-      Script: {instanceID: 22368}
-    - Class: 114
-      Script: {instanceID: 22800}
-    - Class: 114
-      Script: {instanceID: 24310}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    Assets/Scenes/QuizScene.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 89
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 108
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 16764}
-    - Class: 114
-      Script: {instanceID: 16902}
-    - Class: 114
-      Script: {instanceID: 18096}
-    - Class: 114
-      Script: {instanceID: 18378}
-    - Class: 114
-      Script: {instanceID: 18444}
-    - Class: 114
-      Script: {instanceID: 18754}
-    - Class: 114
-      Script: {instanceID: 20066}
-    - Class: 114
-      Script: {instanceID: 21144}
-    - Class: 114
-      Script: {instanceID: 21408}
-    - Class: 114
-      Script: {instanceID: 22148}
-    - Class: 114
-      Script: {instanceID: 22368}
     - Class: 114
       Script: {instanceID: 22800}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
+      Script: {instanceID: 0}
+    - Class: 135
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
@@ -533,7 +310,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 59ee751078f7e105fb340da7c9f24e7b
+      Hash: 2d4963c02fa48faf724f645af8738204
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: bluetooth
@@ -989,7 +766,7 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
-      Hash: b4b2e51b1f4f4ece05000649e2ff9db3
+      Hash: 1b80386a677ab9c34d449bad60179691
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: BattleGameManager
@@ -1733,8 +1510,5 @@ ScriptsOnlyBuild:
     className: UnityOnSliderValueChangedMessageListener
   platform: 13
   scenePathNames:
-  - Assets/Scenes/LoginScene.unity
-  - Assets/Scenes/Main.unity
-  - Assets/Scenes/Battle_Game.unity
-  - Assets/Scenes/QuizScene.unity
+  - Assets/BluetoothAPI/Samples/Led On Off/LedOnOff.unity
   playerPath: /Users/keum/Downloads/123.apk

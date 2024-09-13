@@ -6,7 +6,7 @@ using TMPro;
 using System.IO;
 using System;
 using System.Text;
-using System.IO.Ports;
+//using System.IO.Ports;
 
 public class BattleGameManager : MonoBehaviour
 {
@@ -18,8 +18,8 @@ public class BattleGameManager : MonoBehaviour
     public static int my_ATT;
     public static int your_HP;
     public static int your_ATT;
-    public static TMP_Text my_ATT_text; // HP_text_control에서 관리하기
-    public static TMP_Text your_ATT_text; // HP_text_control에서 관리하기
+    public TMP_Text my_ATT_text; // HP_text_control에서 관리하기
+    public TMP_Text your_ATT_text; // HP_text_control에서 관리하기
     public static Slider my_HP_Slider; // 코딩하기
     public static Slider your_HP_Slider; // 코딩하기
 
@@ -31,9 +31,9 @@ public class BattleGameManager : MonoBehaviour
     //
 
     // 앱 빌드시 주석 {
-    private SerialPort serialPort;
-    private string portName = "/dev/cu.P1_unity";   // MacOS 환경이면 포트 이름을 새로 지정해야함
-    private int baudRate = 9600;
+    //private SerialPort serialPort;
+    //private string portName = "/dev/cu.P1_unity";   // MacOS 환경이면 포트 이름을 새로 지정해야함
+    //private int baudRate = 9600;
     //  앱 빌드시 주석 }
 
 
@@ -60,12 +60,12 @@ public class BattleGameManager : MonoBehaviour
             }
         }
 
-        my_ATT_text.text = $"ATT : {my_HP}";
+        my_ATT_text.text = $"ATT : {my_ATT}";
         // Serial 포트 초기화 및 열기
         //InitializeSerialPort();
     }
 
-    void InitializeSerialPort()
+   /*void InitializeSerialPort()
     {
         try
         {
@@ -77,7 +77,7 @@ public class BattleGameManager : MonoBehaviour
         {
             Debug.LogError($"Failed to open serial port: {e.Message}");
         }
-    }
+    }*/
 
     void LoadUserData()
     {
@@ -93,11 +93,11 @@ public class BattleGameManager : MonoBehaviour
             Debug.Log("Login information clear");
         }
 
-        if (serialPort != null && serialPort.IsOpen)
+        /*if (serialPort != null && serialPort.IsOpen)
         {
             serialPort.Close();
             Debug.Log("Serial port closed.");
-        }
+        }*/
     }
 
     void testcode() // 나중에 지우기
@@ -119,7 +119,7 @@ public class BattleGameManager : MonoBehaviour
         }
     }
 
-    void SendDataToArduino(int hp, int att)
+    /*void SendDataToArduino(int hp, int att)
     {
         if (serialPort != null && serialPort.IsOpen)
         {
@@ -131,7 +131,7 @@ public class BattleGameManager : MonoBehaviour
         {
             Debug.LogError("Serial port is not open.");
         }
-    }
+    }*/
     public static void HP_text_control() // 
     {
 

@@ -924,7 +924,13 @@ PlayerSettings:
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
   cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Legacy Analytics: 0
+    Purchasing: 0
+    UDP: 0
     UNet: 1
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -941,14 +947,14 @@ PlayerSettings:
   embeddedLinuxEnableGamepadInput: 1
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
-  apiCompatibilityLevel: 3
+  apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 3affe1da-df1a-4137-866e-3bf1383b8dee
+  cloudProjectId: f5a838ef-f713-46df-b713-d5ac84c26ef6
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: testTank 2024-07-24_21-30-08
-  organizationId: withm2
+  projectName: testTank
+  organizationId: hogarden
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

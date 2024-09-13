@@ -9,6 +9,8 @@ using System.IO;
 
 public class bluetooth : MonoBehaviour
 {
+    public BattleGameManager battleGameManager;
+
     // 블루투스 관련
     private BluetoothHelper helper; // 블루투스 객체
     public GameObject BT_connect_btn;
@@ -94,8 +96,7 @@ public class bluetooth : MonoBehaviour
             BattleGameManager.your_HP = gameData.my_HP;
             BattleGameManager.your_ATT = gameData.my_ATT;
 
-            BattleGameManager.my_ATT_text.text = $"{BattleGameManager.my_ATT}"; // text 표시
-            BattleGameManager.your_ATT_text.text = $"{BattleGameManager.your_ATT}";
+            battleGameManager.your_ATT_text.text = $"{BattleGameManager.your_ATT}"; // text 표시 내 능력치는 이미 표현함
         }
         else{
             Debug.Log($"Receive Error: " + msg);
