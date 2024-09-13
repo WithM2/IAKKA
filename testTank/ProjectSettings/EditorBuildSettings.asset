@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/BluetoothAPI/Samples/Led On Off/LedOnOff.unity
-    guid: a31f1d7db702e4002a7b6e75f1919f5e
+    path: Assets/Scenes/LoginScene.unity
+    guid: 5f17149e9940745479d5c1835caa446e
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: eb8fe04d0565e46e0a4f479e544a923a
+  - enabled: 1
+    path: Assets/Scenes/Battle_Game.unity
+    guid: 3d51a7ec370104e09afa1115e61ef44e
+  - enabled: 1
+    path: Assets/Scenes/QuizScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

@@ -18,7 +18,7 @@ public class LedOnOffManager : MonoBehaviour
         helper.OnConnectionFailed += OnConnectionFailed;
         helper.OnDataReceived += OnDataReceived;
         helper.setFixedLengthBasedStream(1); //data is received byte by byte
-        helper.setDeviceName("P1_unity");
+        helper.setDeviceName("HC-05");
     }
 
     void OnConnected(BluetoothHelper helper)
