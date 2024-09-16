@@ -405,6 +405,7 @@
 "Assets/Scripts/LoginManager.cs"
 "Assets/Scripts/MainManager.cs"
 "Assets/Scripts/MjpegStreamReader.cs"
+"Assets/Scripts/OnGameManager.cs"
 "Assets/Scripts/QuizManager.cs"
 "Assets/Scripts/SignUpManager.cs"
 "Assets/Scripts/UnityMainThreadDispatcher.cs"

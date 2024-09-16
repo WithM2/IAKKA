@@ -96,7 +96,10 @@ public class bluetooth : MonoBehaviour
             BattleGameManager.your_HP = gameData.my_HP;
             BattleGameManager.your_ATT = gameData.my_ATT;
 
-            battleGameManager.your_ATT_text.text = $"{BattleGameManager.your_ATT}"; // text 표시 내 능력치는 이미 표현함
+            // text 표시 내 능력치는 이미 표현함
+            battleGameManager.your_ATT_text.text = $"{BattleGameManager.your_ATT}";
+
+            battleGameManager.BattleStart(); // 배틀 게임 시작 함수 호출
         }
         else{
             Debug.Log($"Receive Error: " + msg);
@@ -136,8 +139,12 @@ public class bluetooth : MonoBehaviour
         BTname_obj.SetActive(true);
     }
 
-    void OnDestroy() // 지우기
+    void OnDestroy() // 오브젝트 파괴 시(주로 씬 종료 시)
     {
+        if(helper.isConnected() == true){ //블루투스기기가 연결되어있으면
+            helper.Disconnect(); // 연결 해체
+            Debug.Log("Bluetooth is disconnected");
+        }
         Debug.Log("OnDestroy");
     }
 

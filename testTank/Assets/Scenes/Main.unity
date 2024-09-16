@@ -318,6 +318,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0560920e02734444bb0f7a7a42d0bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  start_btn: {fileID: 1521805713}
+  upgrade_btn: {fileID: 1410656334}
 --- !u!4 &200048445
 Transform:
   m_ObjectHideFlags: 0
@@ -920,19 +922,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1410656335}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1638167194}
-        m_TargetAssemblyTypeName: GameScencesMove, Assembly-CSharp
-        m_MethodName: MoveTo_QuizScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1410656335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1054,13 +1044,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1638167194}
-        m_TargetAssemblyTypeName: GameScencesMove, Assembly-CSharp
-        m_MethodName: MoveTo_Battle_Game
+      - m_Target: {fileID: 1638167189}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1116,7 +1106,6 @@ GameObject:
   - component: {fileID: 1638167192}
   - component: {fileID: 1638167191}
   - component: {fileID: 1638167190}
-  - component: {fileID: 1638167194}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1210,18 +1199,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1638167194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1638167189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c9f116acc86f4fd08a10a0e126e0064, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

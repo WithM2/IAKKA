@@ -88,9 +88,7 @@ public class SignupManager : MonoBehaviour
         }
 
         // 기존 데이터에 새로운 사용자 추가
-        userList.users.Add(new User { id = username, password = password, HP = "", ATT = ""});
-        //  HP, ATT 정보추가"금교원"
-
+        userList.users.Add(new User { id = username, password = password, HP = "", ATT = "" });
 
         // JSON 파일에 저장
         string updatedJson = JsonUtility.ToJson(userList, true);

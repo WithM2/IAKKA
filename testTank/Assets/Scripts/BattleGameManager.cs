@@ -11,7 +11,7 @@ using System.Text;
 public class BattleGameManager : MonoBehaviour
 {
     public static string ID = ""; // 로그인 ID 정보
-
+    public GameObject onGameManager;
 
     // 인게임 플레이 관련
     public static int my_HP;
@@ -45,7 +45,7 @@ public class BattleGameManager : MonoBehaviour
         LoadUserData();
         Debug.Log($"Login ID : {ID}");
 
-        testcode(); // json 파일에 HP와 ATT 값 저장하는 코드 (나중에 지움)
+        //testcode(); // json 파일에 HP와 ATT 값 저장하는 코드 (나중에 지움)
 
         foreach (User user in userList.users) // 로그인 정보 가져오기
         {
@@ -100,7 +100,21 @@ public class BattleGameManager : MonoBehaviour
         }*/
     }
 
-    void testcode() // 나중에 지우기
+    public void BattleStart() // 배틀 시작 시 실행
+    {
+        onGameManager.SetActive(true);
+    }
+
+    public void Victory() //게임 승리 시 실행
+    {
+        onGameManager.SetActive(false);
+    }
+
+    public void Lose() //게임 패배 시 실행
+    {
+        onGameManager.SetActive(false);
+    }
+    /*void testcode() // 나중에 지우기
     {
         foreach (User user in userList.users) // 로그인 정보 넣기
         {
@@ -117,7 +131,7 @@ public class BattleGameManager : MonoBehaviour
                 Debug.Log("testcode 실행 성공");
             }
         }
-    }
+    }*/
 
     /*void SendDataToArduino(int hp, int att)
     {
@@ -132,8 +146,4 @@ public class BattleGameManager : MonoBehaviour
             Debug.LogError("Serial port is not open.");
         }
     }*/
-    public static void HP_text_control() // 
-    {
-
-    }
 }

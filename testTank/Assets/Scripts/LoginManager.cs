@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine.SceneManagement;
 
 public class LoginManager : MonoBehaviour
 {
@@ -70,7 +69,7 @@ public class LoginManager : MonoBehaviour
             popupPanel.SetActive(false); // 로그인 성공 시 팝업 닫기
             // 로그인 성공 시 다음 화면으로 이동하거나 다른 동작을 수행합니다.
             
-            SceneManager.LoadScene("Main"); //main으로 이동
+            GameScencesMove.Instance.MoveTo_Main(); //main으로 이동
             
             BattleGameManager.ID += $"{username}"; // 로그인한 아이디 정보 battle 씬으로 전송
         }
