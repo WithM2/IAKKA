@@ -6,10 +6,10 @@ using ArduinoBluetoothAPI;
 using TMPro;
 using System.IO;
 
-
 public class bluetooth : MonoBehaviour
 {
-    public BattleGameManager battleGameManager;
+    [SerializeField]
+    private BattleGameManager battleGameManager; // BattleGameManager.cs 참조
 
     // 블루투스 관련
     private BluetoothHelper helper; // 블루투스 객체
@@ -80,24 +80,30 @@ public class bluetooth : MonoBehaviour
         if(msg == "1"){
             Debug.Log("receive: " + msg);
             BattleGameManager.my_HP -= BattleGameManager.your_ATT;
+            battleGameManager.my_HP_Slider.value -= BattleGameManager.your_ATT;
         }
         // 데미지 가함
         else if(msg == "0"){
             Debug.Log("receive: " + msg);
             BattleGameManager.your_HP -= BattleGameManager.my_ATT;
+            battleGameManager.your_HP_Slider.value -= BattleGameManager.my_ATT;
         }
         // 상대 정보 불러옴
         else if(msg.Length > 25 && msg.Length < 60){// 수신되는 데이터의 예상 길이 범위
             // Json 역직렬화
             GameData gameData = JsonUtility.FromJson<GameData>(msg); // JSON 데이터 역직렬화
             Debug.Log($"Received Data - HP: {gameData.my_HP}, ATT: {gameData.my_ATT}");
-
             // 상대 능력치 저장하는 코드
             BattleGameManager.your_HP = gameData.my_HP;
             BattleGameManager.your_ATT = gameData.my_ATT;
 
             // text 표시 내 능력치는 이미 표현함
             battleGameManager.your_ATT_text.text = $"{BattleGameManager.your_ATT}";
+            // 채력바 초기 세팅
+            battleGameManager.my_HP_Slider.maxValue = BattleGameManager.my_HP;
+            battleGameManager.my_HP_Slider.value = BattleGameManager.my_HP;
+            battleGameManager.your_HP_Slider.maxValue = BattleGameManager.your_HP;
+            battleGameManager.your_HP_Slider.value = BattleGameManager.your_HP;
 
             battleGameManager.BattleStart(); // 배틀 게임 시작 함수 호출
         }
@@ -145,7 +151,6 @@ public class bluetooth : MonoBehaviour
             helper.Disconnect(); // 연결 해체
             Debug.Log("Bluetooth is disconnected");
         }
-        Debug.Log("OnDestroy");
     }
 
     public void sendData(string value)
@@ -170,16 +175,15 @@ public class bluetooth : MonoBehaviour
 
 
 
-    public void FirstDataToArduino() // 버튼 누르면 아두이노로 상태정보 json직렬화한 문자열 형태로 전송
+    public void FirstDataToArduino() // 아두이노로 json직렬화 문자열 전송
     {
         try{
-            LoadUserData();
             string userData = "";
             // json 직렬화해서 전달
             userData += "{";
             foreach (User user in userList.users)
             {
-                if(user.id == "player1" && user.id != null){
+                if(user.id == BattleGameManager.ID && user.id != null){
                     userData += $"\"my_HP\":\"{user.HP}\",\"my_ATT\":\"{user.ATT}\"";
                 }
             }

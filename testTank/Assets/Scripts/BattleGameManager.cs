@@ -11,7 +11,9 @@ using System.Text;
 public class BattleGameManager : MonoBehaviour
 {
     public static string ID = ""; // 로그인 ID 정보
-    public GameObject onGameManager;
+
+    [SerializeField]
+    private GameObject onGameManager;
 
     // 인게임 플레이 관련
     public static int my_HP;
@@ -20,14 +22,18 @@ public class BattleGameManager : MonoBehaviour
     public static int your_ATT;
     public TMP_Text my_ATT_text; // HP_text_control에서 관리하기
     public TMP_Text your_ATT_text; // HP_text_control에서 관리하기
-    public static Slider my_HP_Slider; // 코딩하기
-    public static Slider your_HP_Slider; // 코딩하기
+    public Slider my_HP_Slider; // 코딩하기
+    public Slider your_HP_Slider; // 코딩하기
 
     //
 
     // 로컬 data 관련
     private string filePath;
     private UserList userList;
+    /*  Json에 데이터 업데이트 하는 코드
+        string updatedJson = JsonUtility.ToJson(userList, true);
+        File.WriteAllText(filePath, updatedJson);
+    */
     //
 
     // 앱 빌드시 주석 {
@@ -36,16 +42,12 @@ public class BattleGameManager : MonoBehaviour
     //private int baudRate = 9600;
     //  앱 빌드시 주석 }
 
-
-
     void Start()
     {
         Screen.orientation = ScreenOrientation.LandscapeLeft; // 반 시계방향으로 회전
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
         LoadUserData();
         Debug.Log($"Login ID : {ID}");
-
-        //testcode(); // json 파일에 HP와 ATT 값 저장하는 코드 (나중에 지움)
 
         foreach (User user in userList.users) // 로그인 정보 가져오기
         {
@@ -85,21 +87,6 @@ public class BattleGameManager : MonoBehaviour
         userList = JsonUtility.FromJson<UserList>(jsonText);
     }
 
-    void OnDestroy() // ID 초기화(클리어)
-    {
-        ID = null;
-        if (ID == null)
-        {
-            Debug.Log("Login information clear");
-        }
-
-        /*if (serialPort != null && serialPort.IsOpen)
-        {
-            serialPort.Close();
-            Debug.Log("Serial port closed.");
-        }*/
-    }
-
     public void BattleStart() // 배틀 시작 시 실행
     {
         onGameManager.SetActive(true);
@@ -108,30 +95,16 @@ public class BattleGameManager : MonoBehaviour
     public void Victory() //게임 승리 시 실행
     {
         onGameManager.SetActive(false);
+        Debug.Log("Victory");
+        GameScencesMove.Instance.MoveTo_Main();
     }
 
     public void Lose() //게임 패배 시 실행
     {
         onGameManager.SetActive(false);
+        Debug.Log("Lose");
+        GameScencesMove.Instance.MoveTo_Main();
     }
-    /*void testcode() // 나중에 지우기
-    {
-        foreach (User user in userList.users) // 로그인 정보 넣기
-        {
-            if (user.id == ID)
-            {
-                int a = 120;
-                int b = 10;
-                user.HP = $"{a}";
-                user.ATT = $"{b}";
-                //Debug.Log($"\"user.HP : {user.HP}\"\n\"user.ATT : {user.ATT}\"");
-
-                string updatedJson = JsonUtility.ToJson(userList, true); // json에 저장
-                File.WriteAllText(filePath, updatedJson);
-                Debug.Log("testcode 실행 성공");
-            }
-        }
-    }*/
 
     /*void SendDataToArduino(int hp, int att)
     {

@@ -1,7 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.IO;
 
 public class SignupManager : MonoBehaviour
@@ -88,7 +89,7 @@ public class SignupManager : MonoBehaviour
         }
 
         // 기존 데이터에 새로운 사용자 추가
-        userList.users.Add(new User { id = username, password = password, HP = "", ATT = "" });
+        userList.users.Add(new User { id = username, password = password, HP = "50", ATT = "10" });
 
         // JSON 파일에 저장
         string updatedJson = JsonUtility.ToJson(userList, true);

@@ -97,7 +97,7 @@ public class LoginManager : MonoBehaviour
         string userData = "User Data:\n";
         foreach (User user in userList.users)
         {
-            userData += $"ID: {user.id}, Password: {user.password}\n";
+            userData += $"ID: {user.id}, Password: {user.password}, HP: {user.HP}, ATT: {user.ATT}\n";
         }
         ShowPopup(userData);
     }

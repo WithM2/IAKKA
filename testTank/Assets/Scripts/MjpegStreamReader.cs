@@ -7,14 +7,19 @@ using UnityEngine.UI; // Unity UI, 특히 RawImage 사용을 위한 네임스페
 
 public class MjpegStreamReader : MonoBehaviour
 {
+    [SerializeField]
+    private UnityMainThreadDispatcher unityMainThreadDispatcher;
+
     public GameObject RawImage; // RawImage 오브젝트
-    public string mjpegUrl = "http://192.168.35.95:81/stream"; // MJPEG 스트림 URL 설정
+
+    [SerializeField]
+    private string mjpegUrl = "http://192.168.35.95:81/stream"; // MJPEG 스트림 URL 설정
     public RawImage rawImageDisplay; // UI 요소로 MJPEG 스트림을 표시할 RawImage
     private Texture2D texture; // 스트림 이미지를 표시할 텍스처
     private Thread streamThread; // 스트림을 처리할 스레드
     private bool isRunning = true; // 스트림 읽기 상태 제어 플래그
 
-    void Start()
+    void OnEnable()
     {
         // 텍스처 초기화 - 기본 크기로 시작 (2x2)
         texture = new Texture2D(2, 2, TextureFormat.RGB24, false);
@@ -117,7 +122,7 @@ public class MjpegStreamReader : MonoBehaviour
     {
         if (jpegData.Length > 0)
         {
-            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            unityMainThreadDispatcher.Enqueue(() =>
             {
                 texture.LoadImage(jpegData);
                 rawImageDisplay.texture = texture;

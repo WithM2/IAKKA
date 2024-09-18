@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class OnGameManager : MonoBehaviour
 {
-    public BattleGameManager battleGameManager;
+    [SerializeField]
+    private BattleGameManager battleGameManager;
 
     int my_Max_HP; // 내 최대 HP 변수
     int your_Max_HP; // 상대 최대 HP 변수
