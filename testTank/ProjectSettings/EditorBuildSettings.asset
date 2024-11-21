@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/QuizScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Victory.unity
+    guid: 963c0349a884042ae87f57af034224c3
+  - enabled: 1
+    path: Assets/Scenes/Lose.unity
+    guid: 9427f605044ad4eb38ff92e6c33dc0f0
   m_configObjects: {}

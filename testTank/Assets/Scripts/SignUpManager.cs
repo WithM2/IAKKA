@@ -7,6 +7,10 @@ using System.IO;
 
 public class SignupManager : MonoBehaviour
 {
+    [SerializeField]
+    private DataManager dataManager;
+
+
     public TMP_InputField usernameInput;
     public TMP_InputField passwordInput;
     public Button signupButton;
@@ -16,16 +20,10 @@ public class SignupManager : MonoBehaviour
     public TextMeshProUGUI errorMessage; // 오류 메시지를 표시할 TextMeshPro
     public GameObject popupPanel; // 팝업 패널
 
-    private static string filePath; // static추가
-    private static UserList userList; // static추가
+    private string filePath;
 
     void Start()
     {
-        // 경로 설정 (Resources 폴더는 빌드 후에는 쓰기 불가능하므로 Application.persistentDataPath 사용)
-        filePath = Path.Combine(Application.persistentDataPath, "users.json");
-
-        // 사용자 데이터 로드
-        LoadUserData();
 
         signupButton.onClick.AddListener(OnSignupButtonClick);
         closeSignupButton.onClick.AddListener(OnCloseSignupButtonClick);
@@ -34,26 +32,6 @@ public class SignupManager : MonoBehaviour
         signupPanel.SetActive(false);
     }
 
-    public static void LoadUserData() // static추가
-    {
-        if (File.Exists(filePath))
-        {
-            string jsonText = File.ReadAllText(filePath);
-            Debug.Log("Loaded JSON: " + jsonText); // JSON 내용 출력
-            userList = JsonUtility.FromJson<UserList>(jsonText); // JSON을 UserList로 파싱
-            if (userList == null)
-            {
-                userList = new UserList { users = new List<User>() };
-                Debug.LogWarning("User data was null, initialized a new list.");
-            }
-            Debug.Log("User data loaded from JSON.");
-        }
-        else
-        {
-            userList = new UserList { users = new List<User>() };
-            Debug.LogWarning("User data file not found, created a new list.");
-        }
-    }
 
     void OnSignupButtonClick()
     {
@@ -89,13 +67,10 @@ public class SignupManager : MonoBehaviour
         }
 
         // 기존 데이터에 새로운 사용자 추가
-        userList.users.Add(new User { id = username, password = password, HP = "50", ATT = "10" });
+        dataManager.AddData(username, password, "50", "10");
 
         // JSON 파일에 저장
-        string updatedJson = JsonUtility.ToJson(userList, true);
-        File.WriteAllText(filePath, updatedJson);
-
-        Debug.Log("User added and saved to JSON.");
+        dataManager.JsonDataWrite();
 
         // 입력 필드 초기화
         usernameInput.text = string.Empty;
@@ -109,7 +84,7 @@ public class SignupManager : MonoBehaviour
 
     bool IsUsernameExists(string username)
     {
-        foreach (User user in userList.users)
+        foreach (User user in dataManager.userList.users)
         {
             if (user.id == username)
             {
@@ -129,4 +104,10 @@ public class SignupManager : MonoBehaviour
     {
         popupPanel.SetActive(false);
     }
+
+    public void OnDeleteUserDataClick()
+    {
+        dataManager.clear();
+    }
+
 }

@@ -1,14 +1,14 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class UnityMainThreadDispatcher : MonoBehaviour
 {
-    private readonly Queue<Action> _executionQueue = new Queue<Action>();
+    private static readonly Queue<Action> _executionQueue = new Queue<Action>();
 
-    private void Update()
+    void Update()
     {
-        lock (_executionQueue)
+        lock(_executionQueue)
         {
             while (_executionQueue.Count > 0)
             {
@@ -23,5 +23,10 @@ public class UnityMainThreadDispatcher : MonoBehaviour
         {
             _executionQueue.Enqueue(action);
         }
+    }
+
+    public static void RunOnMainThread(Action action)
+    {
+        _executionQueue.Enqueue(action);
     }
 }

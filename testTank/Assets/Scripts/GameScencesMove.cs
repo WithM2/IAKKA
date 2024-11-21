@@ -20,26 +20,17 @@ public class GameScencesMove : MonoBehaviour
     // 싱글톤 패턴 사용
     
     // 메인 코드 start
-    public void MoveTo_Battle_Game()
+    public void MoveScene(string sceneName)
     {
-        SceneManager.LoadScene("Battle_Game");
-        // " " 안에 이동할 씬이름 입력
+        SceneManager.LoadScene(sceneName);
 
-        Debug.Log("Moved to Battle_Game");
     }
-    public void MoveTo_Main()
-    {
-        SceneManager.LoadScene("Main");
-        Debug.Log("Moved to Main");
-    }
-    public void MoveTO_LoginScene()
-    {
-        SceneManager.LoadScene("LoginScene");
-        Debug.Log("Moved to LoginScene");
-    }
-    public void MoveTo_QuizScene()
-    {
-        SceneManager.LoadScene("QuizScene");
-        Debug.Log("Moved to QuizScene");
-    }
+    // scene이름 참고
+
+        // "Battle_Game"
+        // "Main"
+        // "LoginScene"
+        // "QuizScene"
+
+    // scene이름 참고
 }

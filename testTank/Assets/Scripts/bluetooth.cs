@@ -6,6 +6,7 @@ using ArduinoBluetoothAPI;
 using TMPro;
 using System.IO;
 
+
 public class bluetooth : MonoBehaviour
 {
     [SerializeField]
@@ -13,10 +14,9 @@ public class bluetooth : MonoBehaviour
 
     // 블루투스 관련
     private BluetoothHelper helper; // 블루투스 객체
-    public GameObject BT_connect_btn;
-    public GameObject BT_disconnect_btn;
-    public GameObject BTname_obj;
-    public TMP_InputField BTname_txt;
+    [SerializeField] private GameObject deviceButtonPrefab; // Bluetooth 장치 표시용 버튼 프리팹
+    [SerializeField] private Transform deviceListContent;  // Scroll View의 Content 영역
+    [SerializeField] private Button Scan_button;
     //
 
     // 로컬 data 관련
@@ -25,7 +25,7 @@ public class bluetooth : MonoBehaviour
     //
 
     // 카메라 제어
-    public MjpegStreamReader mjpegstreamReader; // MjpegStreamReader.cs 참조
+    //public MjpegStreamReader mjpegstreamReader; // MjpegStreamReader.cs 참조
 
     // json데이터 임시저장 장치
     class GameData{
@@ -35,11 +35,13 @@ public class bluetooth : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Bluetooth define");
         BluetoothHelper.BLE = false; // BLE 대신 클래식 블루투스 사용
         helper = BluetoothHelper.GetInstance(); // 인스턴스생성
         helper.OnConnected += OnConnected;     // 연결성공 시 호출할 매서드
         helper.OnConnectionFailed += OnConnectionFailed; // 연결 실패시 호출할 매서드
         helper.OnDataReceived += OnDataReceived;  // 데이터 수신 시 호출할 메서드
+        helper.OnScanEnded += OnScanEnded;
         //helper.setFixedLengthBasedStream(1); // 1바이트씩 데이터 수신
         helper.setTerminatorBasedStream("\n"); // "\n"까지 수신
         //helper.setDeviceName("HC-06"); // 테스트 코드 : 연결할 블루투스 이름
@@ -47,29 +49,27 @@ public class bluetooth : MonoBehaviour
         // 경로 설정 (Resources 폴더는 빌드 후에는 쓰기 불가능하므로 Application.persistentDataPath 사용)
         filePath = Path.Combine(Application.persistentDataPath, "users.json");
         LoadUserData();
+        Debug.Log("Done");
+
     }
 
     void OnConnected(BluetoothHelper helper)  // 연결 성공 시
     {
         Debug.Log("Succeed to connect");
         helper.StartListening();              // 데이터 수신
-        BT_connect_btn.SetActive(false);      // connect 버튼 비활성화
-        BT_disconnect_btn.SetActive(true);
-        BTname_obj.SetActive(false);
+        battleGameManager.ObjectDeactive(battleGameManager.Canvas_Buletooth);
+
 
         Debug.Log("FirstDataToArduino - start");
         //sendData(BattleGameManager.my_ATT); // 아두이노로 전송
         FirstDataToArduino(); //주석해제
 
-        mjpegstreamReader.camera_control(true); // 카레마 화면 활성화
+        //mjpegstreamReader.camera_control(true); // 카레마 화면 활성화
     }
 
     void OnConnectionFailed(BluetoothHelper helper) // 연결 실패 시
     {
         Debug.Log("Failed to connect");
-        BT_connect_btn.SetActive(true);
-        BT_disconnect_btn.SetActive(false);
-        BTname_obj.SetActive(true);
     }
 
     void OnDataReceived(BluetoothHelper helper)
@@ -77,13 +77,13 @@ public class bluetooth : MonoBehaviour
         string msg = helper.Read();
 
         // 데미지 받음
-        if(msg == "1"){
+        if(msg.Trim() == "1"){
             Debug.Log("receive: " + msg);
             BattleGameManager.my_HP -= BattleGameManager.your_ATT;
             battleGameManager.my_HP_Slider.value -= BattleGameManager.your_ATT;
         }
         // 데미지 가함
-        else if(msg == "0"){
+        else if(msg.Trim() == "0"){
             Debug.Log("receive: " + msg);
             BattleGameManager.your_HP -= BattleGameManager.my_ATT;
             battleGameManager.your_HP_Slider.value -= BattleGameManager.my_ATT;
@@ -104,32 +104,33 @@ public class bluetooth : MonoBehaviour
             battleGameManager.my_HP_Slider.value = BattleGameManager.my_HP;
             battleGameManager.your_HP_Slider.maxValue = BattleGameManager.your_HP;
             battleGameManager.your_HP_Slider.value = BattleGameManager.your_HP;
-
-            battleGameManager.BattleStart(); // 배틀 게임 시작 함수 호출
+            
+            if(BattleGameManager.my_HP > 0 && BattleGameManager.my_ATT > 0 &&
+                BattleGameManager.your_HP > 0 && BattleGameManager.your_ATT > 0)
+            {
+                battleGameManager.BattleStart(); // 배틀 게임 시작 함수 호출
+            }
+            else{
+                Debug.Log("Received data from arduino is not valid");
+            }
         }
         else{
             Debug.Log($"Receive Error: " + msg);
         }
     }
 
-    private void ProcessReceivedData(string data)
-    {
-        try
-        {
-            GameData gameData = JsonUtility.FromJson<GameData>(data); // JSON 데이터 역직렬화
-            Debug.Log($"Received Data - HP: {gameData.my_HP}, ATT: {gameData.my_ATT}");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Error parsing JSON: {e.Message}"); // JSON 파싱 오류 처리
-        }
-    }
-
-    public void BTname_change()
-    {
-        Debug.Log(BTname_txt.text);
-        helper.setDeviceName(BTname_txt.text); // 연결할 블루투스 이름
-    }
+    // private void ProcessReceivedData(string data)
+    // {
+    //     try
+    //     {
+    //         GameData gameData = JsonUtility.FromJson<GameData>(data); // JSON 데이터 역직렬화
+    //         Debug.Log($"Received Data - HP: {gameData.my_HP}, ATT: {gameData.my_ATT}");
+    //     }
+    //     catch (System.Exception e)
+    //     {
+    //         Debug.LogError($"Error parsing JSON: {e.Message}"); // JSON 파싱 오류 처리
+    //     }
+    // }
 
     public void Connect() // connect 버튼 누르면 호출됨
     {
@@ -140,14 +141,12 @@ public class bluetooth : MonoBehaviour
     public void Disconnect() // disconnect 버튼 누르면 호출됨
     {
         helper.Disconnect(); // 연결 해체
-        BT_connect_btn.SetActive(true);
-        BT_disconnect_btn.SetActive(false);
-        BTname_obj.SetActive(true);
+        Debug.Log("disconnected");
     }
 
     void OnDestroy() // 오브젝트 파괴 시(주로 씬 종료 시)
     {
-        if(helper.isConnected() == true){ //블루투스기기가 연결되어있으면
+        if(helper != null && helper.isConnected() == true){ //블루투스기기가 연결되어있으면
             helper.Disconnect(); // 연결 해체
             Debug.Log("Bluetooth is disconnected");
         }
@@ -201,5 +200,99 @@ public class bluetooth : MonoBehaviour
     {
         string jsonText = File.ReadAllText(filePath);
         userList = JsonUtility.FromJson<UserList>(jsonText);
+    }
+
+
+    // 스캔 시작 버튼과 연결
+    public void StartScan()
+    {
+        if (helper != null)
+        {
+            Scan_button.GetComponentInChildren<TMP_Text>().text = "Scanning";
+            Scan_button.interactable = false;
+
+            //devices.Clear(); // 이전 결과 초기화
+            ClearDeviceListUI(); // UI 초기화
+            helper.ScanNearbyDevices(); // 스캔 시작
+            Debug.Log("Scanning for Bluetooth devices...");
+        }
+    }
+
+    // 스캔 완료 시 호출되는 메서드
+    private void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)
+    {
+        Debug.Log("Scan completed. Found devices:");
+
+        foreach (BluetoothDevice device in devices)
+        {
+            Debug.Log($"Device Name: {device.DeviceName}");
+            if(device.DeviceName != null){
+                AddDeviceToUI(device.DeviceName); // UI에 추가
+            }
+        }
+        Debug.Log("Scan is done");
+        Scan_button.GetComponentInChildren<TMP_Text>().text = "Scan";
+        Scan_button.interactable = true;
+    }
+
+    // 스캔된 장치를 UI에 추가
+    private void AddDeviceToUI(string deviceName)
+    {
+        try
+        {
+            if (deviceButtonPrefab == null)
+            {
+                Debug.LogError("DeviceButtonPrefab is not assigned. Please assign it in the Inspector.");
+                return;
+            }
+
+            if (deviceListContent == null)
+            {
+                Debug.LogError("DeviceListContent is not assigned. Please assign it in the Inspector.");
+                return;
+            }
+            GameObject deviceButton = Instantiate(deviceButtonPrefab, deviceListContent); // 프리팹 생성
+            if (deviceButton == null)
+            {
+                Debug.LogError("Failed to instantiate the device button prefab.");
+                return;
+            }
+            deviceButton.GetComponentInChildren<TMP_Text>().text = deviceName; // 버튼에 장치 이름 표시
+
+            deviceButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                ConnectToDevice(deviceName); // 클릭 시 장치에 연결
+            });
+        }
+        catch (System.Exception  ex)
+        {
+            Debug.LogError($"Unhandled exception in AddDeviceToUI: {ex.Message}\n{ex.StackTrace}");
+        }
+        // 버튼 클릭 이벤트 등록
+        
+    }
+
+    // UI 초기화
+    private void ClearDeviceListUI()
+    {
+        foreach (Transform child in deviceListContent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    // Bluetooth 장치에 연결
+    private void ConnectToDevice(string deviceName)
+    {
+        try
+        {
+            helper.setDeviceName(deviceName); // 연결할 장치 주소 설정
+            helper.Connect(); // 연결 시도
+            Debug.Log("Connecting to " + deviceName);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Connection failed: " + ex.Message);
+        }
     }
 }

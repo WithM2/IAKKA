@@ -4,6 +4,9 @@ using TMPro;
 
 public class QuizManager : MonoBehaviour
 {
+    [SerializeField]
+    private DataManager dataManager;
+
     // UI 요소들
     public TextMeshProUGUI questionText;
     public TextMeshProUGUI scoreText;
@@ -21,11 +24,11 @@ public class QuizManager : MonoBehaviour
 
     // 문제와 유형들
     private string[] questions = {
-        "What is the capital of France?",
+        "안녕 : What is the capital of France?",
         "What is 2 + 2?",
         "Is the Earth flat?",
         "What is the largest ocean on Earth?",
-        "Who wrote 'To Kill a Mockingbird'?"
+        "임진왜란이 일어난 년도는?"
     };
 
     private string[][] options = {
@@ -36,9 +39,9 @@ public class QuizManager : MonoBehaviour
         null // 단답형 문제는 선택지가 없음
     };
 
-    private int[] correctAnswers = { 2, 1, 1, 3, 0 };
+    private int[] correctAnswers = { 2, 1, 0, 3, 0 };
     private string[] questionTypes = { "MultipleChoice", "MultipleChoice", "OX", "MultipleChoice", "ShortAnswer" };
-    private string[] shortAnswers = { null, null, null, null, "Harper Lee" }; // 단답형 답안
+    private string[] shortAnswers = { null, null, null, null, "1592" }; // 단답형 답안
 
     void Start()
     {
@@ -68,6 +71,24 @@ public class QuizManager : MonoBehaviour
         if (currentQuestionIndex >= questions.Length)
         {
             Debug.Log("Quiz Finished!");
+            BattleGameManager.my_HP += score;
+            BattleGameManager.my_ATT += score / 2;
+            Debug.Log($"{BattleGameManager.my_HP}");
+            Debug.Log($"{BattleGameManager.my_ATT}");
+
+            foreach (User user in dataManager.userList.users)
+            {
+                if (user.id == BattleGameManager.ID)
+                {
+                    user.HP = BattleGameManager.my_HP.ToString();
+                    user.ATT = BattleGameManager.my_ATT.ToString();
+                    dataManager.JsonDataWrite();
+
+                    Debug.Log(" my_HP : " + user.HP + " my_ATT : " + user.ATT);
+                }
+            }
+            GameScencesMove.Instance.MoveScene("Main");
+
             return;
         }
 
@@ -105,7 +126,7 @@ public class QuizManager : MonoBehaviour
         if (index == correctAnswers[currentQuestionIndex])
         {
             Debug.Log("Correct!");
-            score++;
+            score += 10;
             UpdateScoreText();
         }
         else
@@ -128,7 +149,7 @@ public class QuizManager : MonoBehaviour
         if (correct)
         {
             Debug.Log("Correct!");
-            score++;
+            score += 10;
             UpdateScoreText();
         }
         else
@@ -146,7 +167,7 @@ public class QuizManager : MonoBehaviour
         if (userAnswer.Equals(shortAnswers[currentQuestionIndex], System.StringComparison.OrdinalIgnoreCase))
         {
             Debug.Log("Correct!");
-            score++;
+            score += 10;
             UpdateScoreText();
         }
         else
