@@ -447,7 +447,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &178232671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -850,7 +850,7 @@ RectTransform:
   m_Father: {fileID: 2097232580}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1754,6 +1754,7 @@ GameObject:
   - component: {fileID: 1091557511}
   - component: {fileID: 1091557510}
   - component: {fileID: 1091557512}
+  - component: {fileID: 1091557513}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -1831,6 +1832,22 @@ MonoBehaviour:
   mjpegUrl: http://192.168.1.1/mjpeg/1
   rawImageDisplay: {fileID: 1091557510}
   texture: {fileID: 0}
+--- !u!114 &1091557513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091557506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1f68e29ecf1459e8b6dc2858f320eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AiTexture: {fileID: 1091557512}
+  AiText: {fileID: 0}
+  uiImage1: {fileID: 0}
+  modelAsset: {fileID: 5022602860645237092, guid: dcc9bd18f603847408d20aa13f6fed4c, type: 3}
 --- !u!1 &1291336930
 GameObject:
   m_ObjectHideFlags: 0
@@ -2707,7 +2724,7 @@ RectTransform:
   m_Father: {fileID: 234374858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
